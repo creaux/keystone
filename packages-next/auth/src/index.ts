@@ -82,16 +82,16 @@ export function createAuth<GeneratedListTypes extends BaseGeneratedListTypes>({
   };
 
   /**
-   * pageMiddleware
+   * redirectMiddleware
    *
-   * Should be added to the ui.pageMiddleware stack.
+   * Should be added to the ui.redirectMiddleware stack.
    *
    * Redirects:
    *  - from the signin or init pages to the index when a valid session is present
    *  - to the init page when initFirstItem is configured, and there are no user in the database
    *  - to the signin page when no valid session is present
    */
-  const pageMiddleware: AdminUIConfig['pageMiddleware'] = async ({
+  const redirectMiddleware: AdminUIConfig['redirectMiddleware'] = async ({
     req,
     isValidSession,
     createContext,
@@ -141,7 +141,6 @@ export function createAuth<GeneratedListTypes extends BaseGeneratedListTypes>({
       filesToWrite.push({
         mode: 'write',
         outputPath: 'pages/init.js',
-        // wonder what this template expects from config...
         src: initTemplate({ listKey, initFirstItem }),
       });
     }
@@ -257,8 +256,10 @@ export function createAuth<GeneratedListTypes extends BaseGeneratedListTypes>({
         ...keystoneConfig.ui,
         publicPages: [...(keystoneConfig.ui.publicPages || []), ...publicPages],
         getAdditionalFiles: [...(keystoneConfig.ui.getAdditionalFiles || []), getAdditionalFiles],
-        pageMiddleware: async args =>
-          (await pageMiddleware(args)) ?? keystoneConfig?.ui?.pageMiddleware?.(args),
+        redirectMiddlewares: [
+          ...(keystoneConfig?.ui?.redirectMiddlewares || []),
+          redirectMiddleware,
+        ],
         enableSessionItem: true,
         isAccessAllowed: async (context: KeystoneContext) => {
           // Allow access to the adminMeta data from the /init path to correctly render that page
@@ -304,7 +305,7 @@ export function createAuth<GeneratedListTypes extends BaseGeneratedListTypes>({
     // In the future we may want to return the following so that developers can
     // roll their own. This is pending a review of the use cases this might be
     // appropriate for, along with documentation and testing.
-    // ui: { enableSessionItem: true, pageMiddleware, getAdditionalFiles, publicPages },
+    // ui: { enableSessionItem: true, redirectMiddlewares, getAdditionalFiles, publicPages },
     // fields,
     // extendGraphqlSchema,
     // validateConfig,

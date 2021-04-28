@@ -25,6 +25,7 @@ export const createAdminUIServer = async (
       return;
     }
     const context = createContext({
+      req,
       sessionContext: sessionStrategy
         ? await createSessionContext(sessionStrategy, req, res, createContext)
         : undefined,
@@ -34,15 +35,19 @@ export const createAdminUIServer = async (
       : sessionStrategy
       ? context.session !== undefined
       : true;
-    const maybeRedirect = await ui?.pageMiddleware?.({
-      req,
-      session: context.session,
-      isValidSession,
-      createContext,
-    });
-    if (maybeRedirect) {
-      res.redirect(maybeRedirect.to);
-      return;
+    for (const m of ui?.redirectMiddlewares || []) {
+      const maybeRedirect = await m({
+        req,
+        session: context.session,
+        isValidSession,
+        createContext,
+      });
+      if (maybeRedirect && maybeRedirect.to) {
+        res.redirect(maybeRedirect.to);
+        return;
+      } else if (maybeRedirect && maybeRedirect.never) {
+        break;
+      }
     }
     if (!isValidSession && !publicPages.includes(url.parse(req.url).pathname!)) {
       app.render(req, res, '/no-access');

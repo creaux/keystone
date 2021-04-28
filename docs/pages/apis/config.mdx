@@ -136,7 +136,14 @@ Options:
 
 Advanced configuration:
 
-(coming soon)
+- `publicPages` (default: `[]`): An array of page routes that can be accessed without passing the `isAccessAllowed`.
+- `getAdditionalFiles`: ((config: KeystoneConfig) => MaybePromise<AdminFileToWrite[]>)[];
+- `pageMiddleware`: (args: {
+  req: IncomingMessage;
+  session: any;
+  isValidSession: boolean;
+  createContext: CreateContext;
+  }) => MaybePromise<{ kind: 'redirect'; to: string } | void>;
 
 ```typescript
 export default config({
@@ -144,10 +151,25 @@ export default config({
     isDisabled: false,
     isAccessAllowed: async context => true,
     // Optional advanced configuration
-    enableSessionItem: true,
-    publicPages: [],
-    getAdditionalFiles: async () => [],
-    pageMiddleware: async () = {},
+    publicPages: ['/welcome'],
+    additionalFiles: [
+      async (config: KeystoneConfig) => [
+        {
+          mode: 'write',
+          outputPath: 'pages/welcome.js',
+          src: `
+            /* @jsx jsx */
+            import { jsx } from '@keystone-ui/core';
+            export default function Welcome() {
+              return (<h1>Welcome to my Keystone system</h1>);
+            }`,
+        },
+      ],
+    ],
+    redirectMiddleware: [async ({ context, isValidSession} : { context: KeystoneContext, isValidSession: boolean }) = {
+      return { to: '...' };
+      // return { never: true };
+    }],
   },
   /* ... */
 });
