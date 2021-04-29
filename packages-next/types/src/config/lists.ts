@@ -108,7 +108,6 @@ export type ListAdminUIConfig<
    * @default false
    */
   hideDelete?: MaybeSessionFunction<boolean>;
-
   /**
    * Configuration specific to the create view in the Admin UI
    */

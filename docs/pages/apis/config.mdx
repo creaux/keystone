@@ -166,7 +166,7 @@ export default config({
         },
       ],
     ],
-    redirectMiddleware: [async ({ context, isValidSession} : { context: KeystoneContext, isValidSession: boolean }) = {
+    pageMiddleware: [async ({ context, isValidSession} : { context: KeystoneContext, isValidSession: boolean }) = {
       return { to: '...' };
       // return { never: true };
     }],

@@ -82,16 +82,16 @@ export function createAuth<GeneratedListTypes extends BaseGeneratedListTypes>({
   };
 
   /**
-   * redirectMiddleware
+   * pageMiddleware
    *
-   * Should be added to the ui.redirectMiddleware stack.
+   * Should be added to the ui.pageMiddleware stack.
    *
    * Redirects:
    *  - from the signin or init pages to the index when a valid session is present
    *  - to the init page when initFirstItem is configured, and there are no user in the database
    *  - to the signin page when no valid session is present
    */
-  const redirectMiddleware: AdminUIConfig['redirectMiddleware'] = async ({
+  const pageMiddleware: AdminUIConfig['pageMiddleware'] = async ({
     req,
     isValidSession,
     createContext,
@@ -256,10 +256,8 @@ export function createAuth<GeneratedListTypes extends BaseGeneratedListTypes>({
         ...keystoneConfig.ui,
         publicPages: [...(keystoneConfig.ui.publicPages || []), ...publicPages],
         getAdditionalFiles: [...(keystoneConfig.ui.getAdditionalFiles || []), getAdditionalFiles],
-        redirectMiddlewares: [
-          ...(keystoneConfig?.ui?.redirectMiddlewares || []),
-          redirectMiddleware,
-        ],
+        pageMiddleware: async args =>
+          (await pageMiddleware(args)) ?? keystoneConfig?.ui?.pageMiddleware?.(args),
         enableSessionItem: true,
         isAccessAllowed: async (context: KeystoneContext) => {
           // Allow access to the adminMeta data from the /init path to correctly render that page
@@ -305,7 +303,7 @@ export function createAuth<GeneratedListTypes extends BaseGeneratedListTypes>({
     // In the future we may want to return the following so that developers can
     // roll their own. This is pending a review of the use cases this might be
     // appropriate for, along with documentation and testing.
-    // ui: { enableSessionItem: true, redirectMiddlewares, getAdditionalFiles, publicPages },
+    // ui: { enableSessionItem: true, pageMiddleware, getAdditionalFiles, publicPages },
     // fields,
     // extendGraphqlSchema,
     // validateConfig,

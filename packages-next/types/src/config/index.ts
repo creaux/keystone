@@ -102,12 +102,12 @@ export type AdminUIConfig = {
   // FIXME: currently unused
   // path?: string;
   getAdditionalFiles?: ((config: KeystoneConfig) => MaybePromise<AdminFileToWrite[]>)[];
-  redirectMiddlewares?: ((args: {
+  pageMiddleware?: (args: {
     req: IncomingMessage;
     session: any;
     isValidSession: boolean;
     createContext: CreateContext;
-  }) => MaybePromise<{ kind: 'redirect'; to: string } | void>)[];
+  }) => MaybePromise<{ kind: 'redirect'; to: string } | void>;
 };
 
 export type AdminFileToWrite =
