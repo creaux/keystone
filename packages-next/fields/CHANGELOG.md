@@ -1,5 +1,20 @@
 # @keystone-next/fields
 
+## 8.0.0
+
+### Major Changes
+
+- [#5578](https://github.com/keystonejs/keystone/pull/5578) [`f7d4c9b9f`](https://github.com/keystonejs/keystone/commit/f7d4c9b9f06cc3090b59d4b29e0907e9f3d1faee) Thanks [@mitchellhamilton](https://github.com/mitchellhamilton)! - Replaced `mode` field on `ImageFieldOutput` GraphQL type with making `ImageFieldOutput` an interface and having a `LocalImageFieldOutput` type that implements `ImageFieldOutput`.
+
+### Patch Changes
+
+- [#5514](https://github.com/keystonejs/keystone/pull/5514) [`8577eb3ba`](https://github.com/keystonejs/keystone/commit/8577eb3baafe9cd61c48d89aca9eff252765e5a6) Thanks [@timleslie](https://github.com/timleslie)! - The field hooks API has deprecated the `addFieldValidationError` argument. It has been replaced with the argument `addValidationError`, and will be removed in a future release.
+
+- Updated dependencies [[`7e81b52b0`](https://github.com/keystonejs/keystone/commit/7e81b52b0f2240f0c590eb8f6733360cab9fe93a), [`fddeacf79`](https://github.com/keystonejs/keystone/commit/fddeacf79d25fea15be57d1a4ec16815bcdc4ab5), [`fdebf79cc`](https://github.com/keystonejs/keystone/commit/fdebf79cc3520ffb65979ddac7d61791f4f37324), [`05d4883ee`](https://github.com/keystonejs/keystone/commit/05d4883ee19bcfdfcbff7f80693a3fa85cf81aaa), [`a0c5aa307`](https://github.com/keystonejs/keystone/commit/a0c5aa30771d187253d0cfe24b4b686e136136cc), [`9fd7cc62a`](https://github.com/keystonejs/keystone/commit/9fd7cc62a889f8a0f8933040bb16fcc36af7795e), [`74fed41e2`](https://github.com/keystonejs/keystone/commit/74fed41e23c3d5c6c073574c54ca339df2235351)]:
+  - @keystone-next/types@17.0.1
+  - @keystone-next/adapter-prisma-legacy@6.0.1
+  - @keystone-next/admin-ui@14.0.1
+
 ## 7.0.0
 
 ### Major Changes
